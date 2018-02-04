@@ -1,6 +1,9 @@
 #include <iostream>
 
+#include "tst_rtchck.h"
+
 using namespace std;
+using namespace mapchck;
 
 //Irreflexivity  f(x, x) must be false.
 //Antisymmetry  f(x, y) implies !f(y, x)
@@ -13,5 +16,6 @@ using namespace std;
 int main()
 {
     cout << "Hello World!" << endl;
+    tst_rt::func2();
     return 0;
 }
