@@ -13,7 +13,7 @@ Below I put the references for
 majority source ragarding the topic of this project.
 
 1. Scott Meyers, Effective STL: 50 Specific Ways to Improve Your Use of the Standard Template Library
-    ISBN-13: 978-0201749625, ISBN-10: 0201749629
+    (ISBN-13: 978-0201749625, ISBN-10: 0201749629).
     Items 19-21
 2. https://www.irif.fr/~yunes/cours/cpp/stl/StrictWeakOrdering.html
 3. https://ru.wikipedia.org/wiki/Частично_упорядоченное_множество
