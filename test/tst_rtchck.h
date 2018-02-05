@@ -30,9 +30,21 @@ struct Foo2_AntisymmetryBroken {
     bool operator< (const Foo2_AntisymmetryBroken&lh) const{return false;}
 };
 
+struct Foo3_TransitivityBroken {
+    int i;
+    Foo3_TransitivityBroken(int vi):i(vi){}
+    bool operator< (const Foo3_TransitivityBroken&lh) const
+    {
+        if (this->i == 0 && lh.i == 2)
+            return false;
+        else
+            return this->i < lh.i;
+    }
+};
+
 template <typename T>inline
 void tstIrreflexivityVec(const std::initializer_list<T>&vt, bool referenceResult) {
-    std::cout << "Check Irreflexivity.." << std::endl;
+    std::cout << "Check Irreflexivity for.." << std::endl;
     int i{0};
     for(auto it1: vt) {
         auto a = rt::checkIrreflexivity(it1);
@@ -50,9 +62,9 @@ template <typename T>inline
 void tstAntisymmetryVec(const std::initializer_list<T>&vt, bool referenceResult) {
     std::cout << "Check Antisymmetry.." << std::endl;
     int i{0};
-    for(auto it1 = vt.begin(); it1 != vt.end(); ++it1) {
+    for(auto it1 = begin(vt); it1 != end(vt); ++it1) {
         int j{i};
-        for(auto it2 = it1; it2 != vt.end(); ++it2) {
+        for(auto it2 = it1; it2 != end(vt); ++it2) {
             if(it2 != it1) {
                 auto lh = *it1;
                 auto rh = *it2;
@@ -61,7 +73,7 @@ void tstAntisymmetryVec(const std::initializer_list<T>&vt, bool referenceResult)
                              ((referenceResult == a)? "  ok for: "
                              :"!! Antisymmetry been broken for: ")
                           << "[i=" << i << ",j=" << j << "] "
-                          << typeid(*it1).name()
+                          << typeid(lh).name()
                           << std::endl;
             }
             ++j;
@@ -74,7 +86,7 @@ template <typename T>inline
 void tstTransitivityVec(const std::initializer_list<T>&vt, bool referenceResult) {
     std::cout << "Check Transitivity.." << std::endl;
     int i{0};
-    for(auto it1 = vt.begin(); it1 != vt.end(); ++it1) {
+    for(auto it1 = begin(vt); it1 != end(vt); ++it1) {
         int j{0};
         for(auto it2 = begin(vt); it2 != end(vt); ++it2) {
             int k{0};
@@ -89,8 +101,8 @@ void tstTransitivityVec(const std::initializer_list<T>&vt, bool referenceResult)
                                  ((referenceResult == res)? "  ok for: "
                                  :"!! Transitivity been broken for: ")
                               << "[i=" << i << ",j=" << j << ",k=" << k << "]"
-                              <<5//<< typeid(*it1).name()
-                              << "(" << a.i << b.i<< c.i<<std::endl;
+                              << typeid(a).name()
+                              <<std::endl;
                 }
                 ++k;
             }
@@ -100,31 +112,45 @@ void tstTransitivityVec(const std::initializer_list<T>&vt, bool referenceResult)
     }
 }
 
-template<typename T>inline
-std::initializer_list<T> hlprGenerator() {
-    return {T(), T(1), T(2)};
-}
-
 void run() {
     std::cout<<"start run-time checking for map/set correctness"<<std::endl;
 
-    auto foo0 = hlprGenerator<Foo0>();
-    auto foo1 = hlprGenerator<Foo1_IrreflexivityBroken>();
-    //tstIrreflexivityVec(foo0, false);
-    //tstIrreflexivityVec(foo1, false);
-    //
-    //tstAntisymmetryVec(foo0, true);
-    //tstAntisymmetryVec(foo1, true);
-    auto foo2 = hlprGenerator<Foo2_AntisymmetryBroken>();
-    //tstAntisymmetryVec(foo2, true);
-    //
-    auto a = rt::checkTransitivity(Foo0(1), Foo0(0), Foo0(2));
-    //tstTransitivityVec(foo0, true);
-    //auto a = rt::checkTransitivity(Foo0(), Foo0(1), Foo0(2));
-//    auto a = rt::checkTransitivity(Foo1_IrreflexivityBroken(),
-//                                   Foo1_IrreflexivityBroken(1),
-//                                   Foo1_IrreflexivityBroken());
-    std::cout << "a=" << a << std::endl;
+    const auto foo0 = {Foo0(0),
+                       Foo0(1),
+                       Foo0(2)};
+
+    const auto foo1 = {Foo1_IrreflexivityBroken(0),
+                       Foo1_IrreflexivityBroken(1),
+                       Foo1_IrreflexivityBroken(2)};
+
+    const auto foo2 = {Foo2_AntisymmetryBroken(0),
+                       Foo2_AntisymmetryBroken(1),
+                       Foo2_AntisymmetryBroken(2)};
+
+    const auto foo3 = {Foo3_TransitivityBroken(0),
+                       Foo3_TransitivityBroken(1),
+                       Foo3_TransitivityBroken(2)};
+
+    const bool doCheckIrreflexivity = true;
+    if(doCheckIrreflexivity) {
+        tstIrreflexivityVec(foo0, false);
+        tstIrreflexivityVec(foo1, false);
+    }
+
+    const bool doCheckAntisymmetry = true;
+    if (doCheckAntisymmetry) {
+        tstAntisymmetryVec(foo0, true);
+        tstAntisymmetryVec(foo1, true);
+        tstAntisymmetryVec(foo2, true);
+    }
+
+    const bool doCheckTransitivity = true;
+    if (doCheckTransitivity) {
+        tstTransitivityVec(foo0, true);
+        tstTransitivityVec(foo1, true);
+        tstTransitivityVec(foo2, true);
+        tstTransitivityVec(foo3, true);
+    }
 }
 
 

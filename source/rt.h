@@ -29,16 +29,14 @@ bool checkTransitivity(const T& a, const T& b, const T& c) {
     bool f1 = (a < b);
     bool f2 = (b < c);
     bool f3 = (a < c);
-    //return (f1 && f2) == f3;
+
     if (f1 && f2) {
         return f3;
     }
     if (!f1 && !f2) {
         return !f3;
     }
-    return (f1 || f2) == f3;
-    //return (f1 ^ f2) ==f3;
-    //return ((f1 || f2) && !(f1 && f2))==f3;
+    return true;//doesn't care about other cases
 }
 
 }
